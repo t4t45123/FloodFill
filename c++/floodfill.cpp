@@ -6,8 +6,8 @@
 #include <iterator>
 using namespace std;
 
-#define xSize 64
-#define ySize 64
+#define xSize 8
+#define ySize 8
 #define cellSize 20
 
 struct Pos {
@@ -484,27 +484,13 @@ int main() {
     cout << endl;
     printFinalPath();
     cout << endl;
-    // generate final path frames
-    string path = "image/output" + std::to_string(i) + ".ppm";
-    i++;
-    outputToPPM(path.c_str());
-    path = "image/output" + std::to_string(i) + ".ppm";
-    i++;
-    outputToPPM(path.c_str());
-    path = "image/output" + std::to_string(i) + ".ppm";
-    i++;
-    outputToPPM(path.c_str());
-    path = "image/output" + std::to_string(i) + ".ppm";
-    i++;
-    outputToPPM(path.c_str());
-    path = "image/output" + std::to_string(i) + ".ppm";
-    i++;
-    outputToPPM(path.c_str());
-    path = "image/output" + std::to_string(i) + ".ppm";
-    i++;
-    outputToPPM(path.c_str());
-    path = "image/output" + std::to_string(i) + ".ppm";
-    i++;
-    outputToPPM(path.c_str());
+    
+    
+    for (int x = 0; x < 5; x++) {
+        string path = "image/output" + std::to_string(i) + ".ppm";
+        i++;
+        outputToPPM(path.c_str());
+    } 
+    
     return 0;
 } 
