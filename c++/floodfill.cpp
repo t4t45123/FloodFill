@@ -181,7 +181,7 @@ void removeRandomWalls() {
         for (int x = 0; x < xSize; x++) {
             Wall w = getRandomWall();
             cout << w;
-            int a = rand() % 16; // chance for wall removal
+            int a = rand() % 50; // chance for wall removal
             if (a == 0) {
                 if (isValidWall(x,y,w)) {
                     removeWall(x,y,w);
@@ -428,18 +428,55 @@ void printFinalPath() {
         cout << endl;
     }
 }
-int main() {
+
+
+
+void loadMaze(const char* path) {
+    /*
+    example maze:
+    15,15,15,15,15,15,1,15
+    15,15,15,15,15,15,1,15
+    15,15,15,15,15,15,1,15
+    15,15,15,15,15,15,1,15
+    15,15,15,15,15,15,1,15
+    15,15,15,15,15,15,1,15
+    15,15,15,15,15,15,1,15
+    15,15,15,15,15,15,1,15
+    // reads entire maxze from file each integer is converted into a wall and that wall is set into the maze using the setwall func
+    */
+    FILE *f = fopen(path, "r");
+    if (f == NULL) {
+        cout << "failed to open maze file: " << path << endl;
+        exit(1);
+    }
+    for (int y = ySize-1; y > -1; y--) {
+        for (int x = 0; x < xSize; x++) {
+            int wallValue = 0;
+            fscanf(f, "%d,", &wallValue);
+            map[y][x].walls = (Wall)wallValue;
+        }
+    }
+    fclose(f);
+}
+
+int main(int argc, char* argv[]) {
     int xPos = 0;
     int yPos = 0;
     srand(time(0));
     generateMap();
-    generateMaze(0,0);
+    
+    if (argc == 2) {
+        loadMaze(argv[1]);
+    }else {
+        generateMaze(4,4);
+        removeRandomWalls();
+    }
     undiscoverMaze();
     map[yPos][xPos].visited = 1; // set start point
     map[yPos][xPos].distance=0;
     cout << "\n general maze \n";
     printMapVisual();
-    removeRandomWalls();
+    
     
     cout << "\n opening the maze \n";
     printMapVisual();
@@ -485,7 +522,7 @@ int main() {
     printFinalPath();
     cout << endl;
     
-    
+
     for (int x = 0; x < 5; x++) {
         string path = "image/output" + std::to_string(i) + ".ppm";
         i++;
