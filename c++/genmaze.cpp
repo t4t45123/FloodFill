@@ -6,7 +6,7 @@
 constexpr int GRID = 8;
 constexpr int CELL_SIZE = 80;
 constexpr int WINDOW_SIZE = GRID * CELL_SIZE;
-constexpr float WALL_THICKNESS = 6.f;
+constexpr float WALL_THICKNESS = 12.f;
 
 enum Wall : uint8_t {
     WALL_N = 1 << 0,
@@ -68,8 +68,36 @@ void saveMaze() {
     }
 }
 
+void loadMaze(const char* path) {
+    /*
+    example maze:
+    15,15,15,15,15,15,1,15
+    15,15,15,15,15,15,1,15
+    15,15,15,15,15,15,1,15
+    15,15,15,15,15,15,1,15
+    15,15,15,15,15,15,1,15
+    15,15,15,15,15,15,1,15
+    15,15,15,15,15,15,1,15
+    15,15,15,15,15,15,1,15
+    */
+    FILE *f = fopen(path, "r");
+    if (f == NULL) {
+        std::cout << "failed to open maze file: " << path << std::endl;
+        exit(1);
+    }
+    for (int y = GRID-1; y > -1; y--) {
+        for (int x = 0; x < GRID; x++) {
+            int wallValue = 0;
+            fscanf(f, "%d,", &wallValue);
+            maze[GRID][GRID] = wallValue;
+        }
+    }
+    fclose(f);
+}
+
 int main() {
-    std::cout << "press s to save";
+    std::cout << "press s to save" << std::endl;
+    std::cout << "press l to load" << std::endl;
 
     sf::RenderWindow window(
         sf::VideoMode(sf::Vector2u(WINDOW_SIZE, WINDOW_SIZE)),
@@ -87,6 +115,8 @@ int main() {
             if (auto* key = event->getIf<sf::Event::KeyPressed>()) {
                 if (key->code == sf::Keyboard::Key::S)
                     saveMaze();
+                if (key->code == sf::Keyboard::Key::L)
+                    loadMaze("maze.txt");
             }
 
             if (auto* mouse = event->getIf<sf::Event::MouseButtonPressed>()) {

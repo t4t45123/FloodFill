@@ -442,7 +442,6 @@ void loadMaze(const char* path) {
     15,15,15,15,15,15,1,15
     15,15,15,15,15,15,1,15
     15,15,15,15,15,15,1,15
-    // reads entire maxze from file each integer is converted into a wall and that wall is set into the maze using the setwall func
     */
     FILE *f = fopen(path, "r");
     if (f == NULL) {
