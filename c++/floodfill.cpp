@@ -15,6 +15,8 @@ struct Pos {
 };
 
 
+vector<Pos> finalPath = {};
+
 
 int getDistanceNoWalls(int x, int y, int gx, int gy) {
     int distance = gx-x + gy-y;
@@ -28,6 +30,7 @@ void setBestDistance() {
     }
 }
 
+int dir = 0; // 0 = up, 1 = right, 2 = down, 3 = left
 
 
 
@@ -101,6 +104,7 @@ void updateFinalPath() {
     int currentSmallest = map[cy][cx].distance;
     int x = cx;
     int y = cy;
+    finalPath.clear();
     while (map[cy][cx].distance != 0) {
         for (int i = 0; i < 4; i++) {
             int nx = cx;
@@ -122,10 +126,14 @@ void updateFinalPath() {
             break;
         }
         map[cy][cx].final=1;
+        Pos t {cx,cy};
+        finalPath.push_back(t);
         cy=y;
         cx=x;
+        
     }
     map[0][0].final =1;
+    
 }
 
 void printFinalPath() {
@@ -137,7 +145,13 @@ void printFinalPath() {
     }
 }
 
-
+void writeFinalPath() {
+    FILE *f = fopen("finalPath.txt", "w");
+    for (int i = finalPath.size()-1; i > -1; i--) {
+        fprintf(f, "%d,%d\n",finalPath[i].x,finalPath[i].y);
+    }
+    fclose(f);
+}
 
 
 
@@ -210,6 +224,7 @@ int main(int argc, char* argv[]) {
         i++;
         outputToPPM(path.c_str());
     } 
+    writeFinalPath();
     
     return 0;
 } 
