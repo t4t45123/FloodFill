@@ -227,6 +227,7 @@ void printDistanceMap() {
 }
 
 
+
 void outputToPPM(const char* path) {
     FILE *f = fopen(path, "wb");
     int w = xSize*cellSize;
