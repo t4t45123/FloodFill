@@ -30,7 +30,7 @@ void setBestDistance() {
     }
 }
 
-int dir = 0; // 0 = up, 1 = right, 2 = down, 3 = left
+int dir = 0; // 0 = up, 90 = right, 180 = down, 270 = left
 
 
 
@@ -153,7 +153,52 @@ void writeFinalPath() {
     fclose(f);
 }
 
+void calcMove(Pos start, Pos end, FILE* f) {
+    int xDiff = end.x - start.x;
+    int yDiff = end.y - start.y;
 
+    int targetDir;
+    if (xDiff == 1) {
+        targetDir = 90;
+        //fprintf(f, "move right\n");
+    }
+    if (xDiff == -1) {
+        targetDir = 270;
+        //fprintf(f, "move left\n");
+    }
+    if (yDiff == 1) {
+        targetDir = 0;
+        //fprintf(f, "move up\n");
+    }
+    if (yDiff == -1) {
+        targetDir = 180;
+        //fprintf(f, "move down\n");
+    }
+    if (targetDir != dir) {
+        int diff = targetDir - dir;
+        if (diff == -270 || diff == 90) {
+            fprintf(f, "r: 90\n");
+        }else if (diff == 270 || diff == -90) {
+            fprintf(f, "r: -90\n");
+        }else if (diff == 180 || diff == -180) {
+            fprintf(f, "r: 90\n");
+            fprintf(f, "r: 90\n");
+        }
+        dir = targetDir;
+    }
+    fprintf(f, "m: 1\n");
+}
+
+void writeMovement() {
+    FILE *f = fopen("finalPathMoves.txt", "w");
+    vector<Pos>::iterator it;
+    Pos current = {0,0};
+    for (it = finalPath.end(); it != finalPath.begin(); it--) {
+        calcMove(current,*it,f);
+        current = *it;
+    }
+    fclose(f);
+}
 
 int main(int argc, char* argv[]) {
     int xPos = 0;
@@ -225,6 +270,7 @@ int main(int argc, char* argv[]) {
         outputToPPM(path.c_str());
     } 
     writeFinalPath();
+    writeMovement();
     
     return 0;
 } 
